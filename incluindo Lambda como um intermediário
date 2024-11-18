@@ -1,7 +1,7 @@
 O exemplo abaixo inclui o uso de Lambda como um intermediário:
 
 json
-Copiar código
+
 {
   "Comment": "Assistente de Delivery com integração ao Amazon Bedrock via AWS Lambda",
   "StartAt": "EscolherPratoPrincipal",
