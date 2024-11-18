@@ -1,0 +1,93 @@
+O exemplo abaixo inclui o uso de Lambda como um intermediário:
+
+json
+Copiar código
+{
+  "Comment": "Assistente de Delivery com integração ao Amazon Bedrock via AWS Lambda",
+  "StartAt": "EscolherPratoPrincipal",
+  "States": {
+    "EscolherPratoPrincipal": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:REGION:ACCOUNT_ID:function:InvokeBedrock",
+      "Parameters": {
+        "Action": "SugestaoAcompanhamentos",
+        "Input": {
+          "PratoPrincipal": "$.PratoPrincipal"
+        }
+      },
+      "ResultPath": "$.SugestoesAcompanhamentos",
+      "Next": "SugestaoDeBebidas"
+    },
+    "SugestaoDeBebidas": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:REGION:ACCOUNT_ID:function:InvokeBedrock",
+      "Parameters": {
+        "Action": "SugestaoBebidas",
+        "Input": {
+          "PratoPrincipal": "$.PratoPrincipal",
+          "Acompanhamentos": "$.SugestoesAcompanhamentos"
+        }
+      },
+      "ResultPath": "$.SugestoesBebidas",
+      "Next": "SugestaoDeLugar"
+    },
+    "SugestaoDeLugar": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:REGION:ACCOUNT_ID:function:InvokeBedrock",
+      "Parameters": {
+        "Action": "SugestaoLugar",
+        "Input": {
+          "PratoPrincipal": "$.PratoPrincipal",
+          "Acompanhamentos": "$.SugestoesAcompanhamentos",
+          "Bebidas": "$.SugestoesBebidas"
+        }
+      },
+      "ResultPath": "$.SugestaoLugar",
+      "Next": "Finalizar"
+    },
+    "Finalizar": {
+      "Type": "Succeed"
+    }
+  }
+}
+Como implementar:
+Função Lambda:
+
+Escreva a função Lambda para cada ação (SugestaoAcompanhamentos, SugestaoBebidas, SugestaoLugar).
+Na Lambda, use o SDK da AWS para invocar o Amazon Bedrock com o modelo HAIKU.
+Exemplo em Python (usando o SDK boto3):
+python
+Copiar código
+import boto3
+
+def lambda_handler(event, context):
+    client = boto3.client('bedrock-runtime')
+    action = event['Action']
+    input_data = event['Input']
+
+    if action == "SugestaoAcompanhamentos":
+        instruction = f"O usuário escolheu {input_data['PratoPrincipal']}. Sugira acompanhamentos."
+    elif action == "SugestaoBebidas":
+        instruction = f"Com base no prato {input_data['PratoPrincipal']} e nos acompanhamentos {input_data['Acompanhamentos']}, sugira bebidas que harmonizem."
+    elif action == "SugestaoLugar":
+        instruction = f"Baseado na comida, bebida e acompanhamentos, sugira um lugar romântico para uma experiência gastronômica."
+
+    response = client.invoke_model(
+        modelId="haiku",
+        contentType="application/json",
+        body={
+            "Instruction": instruction,
+            "UserInput": input_data
+        }
+    )
+
+    return response['body']
+Deploy Lambda:
+
+Suba essa função no Lambda e registre a ARN no Step Functions.
+Configuração no Step Functions:
+
+Substitua arn:aws:lambda:REGION:ACCOUNT_ID:function:InvokeBedrock pela ARN da sua função Lambda.
+Benefícios:
+Flexibilidade: Permite usar o Amazon Bedrock com qualquer estado do Step Functions.
+Escalabilidade: Aproveita o Step Functions para coordenar fluxos complexos de sugestões.
