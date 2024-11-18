@@ -82,12 +82,13 @@ def lambda_handler(event, context):
     )
 
     return response['body']
+
 Deploy Lambda:
-
 Suba essa função no Lambda e registre a ARN no Step Functions.
-Configuração no Step Functions:
 
+Configuração no Step Functions:
 Substitua arn:aws:lambda:REGION:ACCOUNT_ID:function:InvokeBedrock pela ARN da sua função Lambda.
+
 Benefícios:
 Flexibilidade: Permite usar o Amazon Bedrock com qualquer estado do Step Functions.
 Escalabilidade: Aproveita o Step Functions para coordenar fluxos complexos de sugestões.
