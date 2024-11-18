@@ -73,5 +73,9 @@ Finalizar: O fluxo é concluído.
 Observações:
 
 ModelId: O identificador do modelo HAIKU do Amazon Bedrock.
-Parameters: Cada tarefa define instruções e entradas específicas para gerar as sugestões. Os campos Input podem ser ajustados conforme necessário.
+
+Parameters: Cada tarefa define instruções e entradas específicas para gerar as sugestões. 
+
+Os campos Input podem ser ajustados conforme necessário.
+
 ResultPath: As respostas do modelo são armazenadas em caminhos específicos no estado para serem usadas nas próximas etapas.
