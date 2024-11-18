@@ -62,9 +62,13 @@ Assistente Delivery para sugestionar ao usuário acompanhamentos e lugares para 
 Explicação do Fluxo:
 
 EscolherPratoPrincipal: O assistente inicia com a entrada do prato principal e utiliza o modelo HAIKU para sugerir acompanhamentos.
+
 SugestaoDeBebidas: Com base no prato e acompanhamentos, sugere bebidas apropriadas.
+
 SugestaoDeLugar: Com todos os itens definidos, sugere um local que proporcione uma experiência romântica.
+
 Finalizar: O fluxo é concluído.
+
 
 Observações:
 
